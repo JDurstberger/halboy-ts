@@ -25,9 +25,9 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: install dependencies
         run: pnpm install
-      - name:  check formatting
+      - name: check formatting
         run: pnpm checkFormatting
-      - name:  lint
+      - name: lint
         run: pnpm lint
   test:
     runs-on: ubuntu-latest

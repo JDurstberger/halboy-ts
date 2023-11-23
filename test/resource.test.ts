@@ -1,4 +1,4 @@
-import {Resource} from "../src";
+import { Resource } from '../src'
 
 describe('HAL Resource', () => {
   describe('to JSON', () => {

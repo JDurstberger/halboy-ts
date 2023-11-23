@@ -5,25 +5,44 @@ name: ci
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
+  analyse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: 'pnpm'
+      - name: dump context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: install dependencies
+        run: pnpm install
+      - name:  check formatting
+        run: pnpm checkFormatting
+      - name:  lint
+        run: pnpm lint
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: pnpm/action-setup@v2
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 21
-        cache: 'pnpm'
-    - name: dump context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-    - name: install dependencies
-      run: pnpm install
-    - name: run tests
-      run: pnpm test
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: 'pnpm'
+      - name: dump context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: install dependencies
+        run: pnpm install
+      - name: run tests
+        run: pnpm test

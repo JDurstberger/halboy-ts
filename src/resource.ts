@@ -1,23 +1,32 @@
 export type Link = {
   href: string
 }
-export type Links = Record<string, Link>
+export type Links = { [key: string]: Link }
+export type Property =
+  | string
+  | number
+  | boolean
+  | Property[]
+  | { [key: string]: Property }
+export type Properties = { [key: string]: Property }
 
 export class Resource {
   private readonly _links: Links
+  private readonly _properties: Properties
 
-  public get links() {
-    return { ...this._links }
-  }
-
-  constructor(links: Links) {
+  constructor(links: Links, properties: Properties) {
     this._links = links
+    this._properties = properties
   }
 
   static create(selfUrl?: string): Resource {
-    const resource = new Resource({})
+    const resource = new Resource({}, {})
 
     return selfUrl ? resource.addLink('self', selfUrl) : resource
+  }
+
+  addLink(relation: string, href: string): Resource {
+    return new Resource({ [relation]: { href: href } }, this._properties)
   }
 
   getLink(relation: string): Link | undefined {
@@ -34,16 +43,22 @@ export class Resource {
     }
   }
 
-  toJson(): object {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    const json: Record<string, any> = {}
-    if (!isEmpty(this._links)) json['_links'] = this.links
-
-    return json
+  addProperty(key: string, value: Property): Resource {
+    return new Resource(this._links, { ...this._properties, [key]: value })
   }
 
-  addLink(relation: string, href: string) {
-    return new Resource({ [relation]: { href: href } })
+  getProperty(key: string): Property {
+    return this._properties[key]
+  }
+
+  toJson(): object {
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    const json: Record<string, any> = {
+      ...this._properties,
+    }
+    if (!isEmpty(this._links)) json['_links'] = this._links
+
+    return json
   }
 }
 

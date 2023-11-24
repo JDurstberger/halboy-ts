@@ -3,12 +3,14 @@
   "license": "MIT",
   "packageManager": "pnpm@8.10.5",
   "scripts": {
+    "check": "pnpm format && pnpm lint && pnpm test",
     "checkFormatting": "prettier . --check",
     "format": "prettier . --write",
     "lint": "eslint .",
     "test": "jest"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@types/jest": "^29.5.10",
     "@typescript-eslint/eslint-plugin": "^6.12.0",
     "@typescript-eslint/parser": "^6.12.0",

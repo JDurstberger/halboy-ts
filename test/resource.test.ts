@@ -92,6 +92,32 @@ describe('HAL Resource', () => {
     })
   })
 
+  describe('embedded resource', () => {
+    test('embedded resource does not exist by default', () => {
+      const key = faker.lorem.word()
+      const resource = Resource.create()
+
+      const embeddedResource = resource.getResource(key)
+
+      expect(embeddedResource).toBeUndefined()
+    })
+
+    test('returns resource for added resource', () => {
+      const key = faker.lorem.word()
+      const expectedEmbeddedResource = Resource.create(faker.internet.url())
+
+      const resource = Resource.create().addResource(
+        key,
+        expectedEmbeddedResource,
+      )
+
+      const embeddedResource = resource.getResource(key)
+      expect(embeddedResource.toJson()).toStrictEqual(
+        expectedEmbeddedResource.toJson(),
+      )
+    })
+  })
+
   describe('to JSON', () => {
     test('creates empty JSON for new resource', () => {
       const resource = Resource.create()
@@ -124,6 +150,20 @@ describe('HAL Resource', () => {
 
       expect(json).toStrictEqual({
         [key]: value,
+      })
+    })
+
+    test('creates JSON with embeddedResource', () => {
+      const key = 'key'
+      const embeddedResource = Resource.create(faker.internet.url())
+      const resource = Resource.create().addResource('key', embeddedResource)
+
+      const json = resource.toJson()
+
+      expect(json).toStrictEqual({
+        _embedded: {
+          [key]: embeddedResource.toJson(),
+        },
       })
     })
   })

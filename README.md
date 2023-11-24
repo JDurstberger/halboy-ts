@@ -13,10 +13,19 @@ Creating and managing resources is very simple.
 ```ts
 import { Resource } from 'halboy-ts'
 
-const resource = Resource.create().addLink(
-  'someRelation',
-  'https://example.com',
-)
+const resource = Resource.create('https://example.com/things/123')
+  .addLink('otherThing', 'https://example.com/other-things/456')
+  .addProperty('someProp', 'hello, world!')
+
+console.log(resource.toJson())
+
+//output
+//{
+//  someProp: 'hello, world!',
+//  _links: {
+//    otherThing: { href: 'https://example.com/other-things/456' }
+//  }
+//}
 ```
 
 ## TODO
@@ -24,15 +33,12 @@ const resource = Resource.create().addLink(
 - Resource
 
   - links
-    - serialisation
     - support for deprecation
     - support for templated
   - properties
   - embedded
   - toJson
-    - links
     - embedded
-    - properties
   - fromJson
 
 - Navigator

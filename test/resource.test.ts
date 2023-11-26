@@ -49,6 +49,29 @@ describe('HAL Resource', () => {
       expect(link).toStrictEqual({ href: url })
     })
 
+    test('returns links when accessing array of links with getLinks', () => {
+      const relation = faker.lorem.word()
+      const url1 = faker.internet.url()
+      const url2 = faker.internet.url()
+      const urls = [url1, url2]
+
+      const resource = Resource.create().addLinks(relation, urls)
+
+      const links = resource.getLinks(relation)
+      expect(links).toStrictEqual([{ href: url1 }, { href: url2 }])
+    })
+
+    test('throws when accessing array of links with getLink', () => {
+      const relation = faker.lorem.word()
+      const urls = [faker.internet.url(), faker.internet.url()]
+
+      const resource = Resource.create().addLinks(relation, urls)
+
+      expect(() => resource.getLink(relation)).toThrow(
+        `${relation} is an array of links.`,
+      )
+    })
+
     test('returns href for added link', () => {
       const relation = faker.lorem.word()
       const url = faker.internet.url()
@@ -57,6 +80,38 @@ describe('HAL Resource', () => {
 
       const href = resource.getHref(relation)
       expect(href).toBe(url)
+    })
+
+    test('returns hrefs when accessing array of links with getHrefs', () => {
+      const relation = faker.lorem.word()
+      const urls = [faker.internet.url(), faker.internet.url()]
+
+      const resource = Resource.create().addLinks(relation, urls)
+
+      const hrefs = resource.getHrefs(relation)
+      expect(hrefs).toStrictEqual(urls)
+    })
+
+    test('throws when accessing array of links with getHref', () => {
+      const relation = faker.lorem.word()
+      const urls = [faker.internet.url(), faker.internet.url()]
+
+      const resource = Resource.create().addLinks(relation, urls)
+
+      expect(() => resource.getHref(relation)).toThrow(
+        `${relation} is an array of links.`,
+      )
+    })
+
+    test('throws when accessing link with getHrefs', () => {
+      const relation = faker.lorem.word()
+      const url = faker.internet.url()
+
+      const resource = Resource.create().addLink(relation, url)
+
+      expect(() => resource.getHrefs(relation)).toThrow(
+        `${relation} is not an array of links.`,
+      )
     })
 
     test('can not modify link by modifying returned link', () => {
@@ -127,7 +182,7 @@ describe('HAL Resource', () => {
       expect(json).toStrictEqual({})
     })
 
-    test('creates JSON with _links', () => {
+    test('creates JSON with link in _links', () => {
       const relation = 'relation'
       const uri = 'https://example.com'
       const resource = Resource.create().addLink(relation, uri)
@@ -137,6 +192,20 @@ describe('HAL Resource', () => {
       expect(json).toStrictEqual({
         _links: {
           relation: { href: uri },
+        },
+      })
+    })
+
+    test('creates JSON with link array in _links', () => {
+      const relation = 'relation'
+      const uri = 'https://example.com'
+      const resource = Resource.create().addLinks(relation, [uri, uri])
+
+      const json = resource.toJson()
+
+      expect(json).toStrictEqual({
+        _links: {
+          relation: [{ href: uri }, { href: uri }],
         },
       })
     })

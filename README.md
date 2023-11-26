@@ -33,7 +33,6 @@ console.log(resource.toJson())
 - Resource
 
   - links
-    - support for arrays of links
     - support for deprecation
     - support for templated
   - embedded

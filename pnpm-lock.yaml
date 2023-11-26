@@ -8,6 +8,9 @@ devDependencies:
   '@faker-js/faker':
     specifier: ^8.3.1
     version: 8.3.1
+  '@stylistic/eslint-plugin-js':
+    specifier: ^1.4.1
+    version: 1.4.1(eslint@8.54.0)
   '@types/jest':
     specifier: ^29.5.10
     version: 29.5.10
@@ -955,6 +958,23 @@ packages:
       }
     dependencies:
       '@sinonjs/commons': 3.0.0
+    dev: true
+
+  /@stylistic/eslint-plugin-js@1.4.1(eslint@8.54.0):
+    resolution:
+      {
+        integrity: sha512-WXHPEVw5PB7OML7cLwHJDEcCyLiP7vzKeBbSwmpHLK0oh0JYkoJfTg2hEdFuQT5rQxFy3KzCy9R1mZ0wgLjKrA==,
+      }
+    engines: { node: ^16.0.0 || >=18.0.0 }
+    peerDependencies:
+      eslint: '>=8.40.0'
+    dependencies:
+      acorn: 8.11.2
+      escape-string-regexp: 4.0.0
+      eslint: 8.54.0
+      eslint-visitor-keys: 3.4.3
+      espree: 9.6.1
+      graphemer: 1.4.0
     dev: true
 
   /@types/babel__core@7.20.5:

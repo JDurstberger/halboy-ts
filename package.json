@@ -1,5 +1,6 @@
 {
   "name": "halboy-ts",
+  "version": "0.0.1",
   "license": "MIT",
   "packageManager": "pnpm@8.10.5",
   "scripts": {

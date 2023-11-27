@@ -2,13 +2,18 @@
   "name": "halboy-ts",
   "version": "0.0.1",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JDurstberger/halboy-ts.git"
+  },
   "packageManager": "pnpm@8.10.5",
   "scripts": {
     "check": "pnpm format && pnpm lint && pnpm test",
     "checkFormatting": "prettier . --check",
     "format": "prettier . --write",
     "lint": "eslint .",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",

@@ -13,7 +13,8 @@
     "format": "prettier . --write",
     "lint": "eslint .",
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "version:bump:pre": "npm version prerelease --preid=pre"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",

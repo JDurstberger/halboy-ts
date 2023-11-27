@@ -236,4 +236,72 @@ describe('HAL Resource', () => {
       })
     })
   })
+
+  describe('from JSON', () => {
+    test('creates empty Resource from empty object', () => {
+      const json = {}
+
+      const resource = Resource.fromJson(json)
+
+      expect(resource.toJson()).toStrictEqual(json)
+    })
+
+    test('creates Resource with property from object', () => {
+      const key = faker.lorem.word()
+      const value = randomProperty()
+      const json = { [key]: value }
+
+      const resource = Resource.fromJson(json)
+
+      expect(resource.toJson()).toStrictEqual(json)
+      expect(resource.getProperty(key)).toStrictEqual(value)
+    })
+
+    test('creates Resource with link from object', () => {
+      const relation = faker.lorem.word()
+      const url = randomProperty()
+      const json = {
+        _links: {
+          [relation]: { href: url },
+        },
+      }
+
+      const resource = Resource.fromJson(json)
+
+      expect(resource.toJson()).toStrictEqual(json)
+      expect(resource.getHref(relation)).toStrictEqual(url)
+      expect(resource.getProperty('_links')).toBeUndefined()
+    })
+
+    test('creates Resource with embedded resource from object', () => {
+      const embeddedResourceKey = faker.lorem.word()
+      const embeddedResourceRelation = faker.lorem.word()
+      const embeddedResourceUrl = faker.internet.url()
+      const embeddedResourcePropertyKey = faker.lorem.word()
+      const embeddedResourcePropertyValue = randomProperty()
+      const json = {
+        _embedded: {
+          [embeddedResourceKey]: {
+            [embeddedResourcePropertyKey]: embeddedResourcePropertyValue,
+            _links: {
+              [embeddedResourceRelation]: { href: embeddedResourceUrl },
+            },
+          },
+        },
+      }
+
+      const resource = Resource.fromJson(json)
+
+      const embeddedResource = resource.getResource(embeddedResourceKey)
+      expect(resource.toJson()).toStrictEqual(json)
+      expect(resource.getProperty('_links')).toBeUndefined()
+      expect(resource.getProperty('_embedded')).toBeUndefined()
+      expect(embeddedResource.getHref(embeddedResourceRelation)).toStrictEqual(
+        embeddedResourceUrl,
+      )
+      expect(
+        embeddedResource.getProperty(embeddedResourcePropertyKey),
+      ).toStrictEqual(embeddedResourcePropertyValue)
+    })
+  })
 })

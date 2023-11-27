@@ -31,6 +31,16 @@ export class Resource {
     return selfUrl ? resource.addLink('self', selfUrl) : resource
   }
 
+  static fromJson(json: object): Resource {
+    const links = json['_links'] ?? {}
+    const embedded: { [key: string]: object } = json['_embedded'] ?? {}
+    const properties = { ...json }
+    delete properties['_links']
+    delete properties['_embedded']
+    const resources = mapObject(embedded, (e) => this.fromJson(e))
+    return new Resource(links, properties, resources)
+  }
+
   addLink(relation: string, href: string): Resource {
     return new Resource(
       { [relation]: hrefToLink(href) },

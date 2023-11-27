@@ -5,7 +5,7 @@ set -e
 set -o pipefail
 
 rake version:bump[pre]
-rake publish
+rake release
 
 git push --all
 git push --tags

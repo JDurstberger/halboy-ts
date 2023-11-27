@@ -8,7 +8,9 @@
   },
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "files": ["/build"],
+  "files": [
+    "/build"
+  ],
   "packageManager": "pnpm@8.10.5",
   "scripts": {
     "formatting:check": "prettier . --check",

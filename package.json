@@ -8,9 +8,8 @@
   },
   "packageManager": "pnpm@8.10.5",
   "scripts": {
-    "check": "pnpm format && pnpm lint && pnpm test",
-    "checkFormatting": "prettier . --check",
-    "format": "prettier . --write",
+    "formatting:check": "prettier . --check",
+    "formatting:fix": "prettier . --write",
     "lint": "eslint .",
     "test": "jest",
     "build": "tsc",

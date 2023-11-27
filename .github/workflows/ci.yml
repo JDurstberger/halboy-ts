@@ -7,45 +7,60 @@ on:
     branches: ['main']
 
 jobs:
-  analyse:
+  check-formatting:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v4
         with:
           node-version: 21
           cache: 'pnpm'
-      - name: install dependencies
-        run: pnpm install
       - name: check formatting
-        run: pnpm checkFormatting
+        run: rake formatting:check
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: 'pnpm'
       - name: lint
-        run: pnpm lint
+        run: rake lint
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v4
         with:
           node-version: 21
           cache: 'pnpm'
-      - name: install dependencies
-        run: pnpm install
       - name: run tests
-        run: pnpm test
+        run: rake test
   build:
-    needs: [analyse, test]
+    needs: [check-formatting, lint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
       - uses: pnpm/action-setup@v2
       - uses: actions/setup-node@v4
         with:
           node-version: 21
           cache: 'pnpm'
-      - name: install dependencies
-        run: pnpm install
       - name: build
-        run: pnpm build
+        run: rake build

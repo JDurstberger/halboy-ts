@@ -44,7 +44,7 @@ console.log(resource.toJson())
   - embedded
     - support for arrays of resources
   - fromJson
-    - support for arrays of resources 
+    - support for arrays of resources
 
 - Navigator
 - Test Support

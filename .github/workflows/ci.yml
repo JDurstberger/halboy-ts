@@ -78,5 +78,13 @@ jobs:
         with:
           node-version: 21
           cache: 'pnpm'
-      - name: pre-release
-        run: echo "TEST"
+      - name: bump-version
+        run: rake version:bump[pre]
+      - name: publish
+        run: rake publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_JS_ACCESS_TOKEN }}
+      - name: push branch
+        run: git push
+      - name: push tag
+        run: git push --tags

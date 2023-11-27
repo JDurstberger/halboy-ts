@@ -4,9 +4,15 @@
 
 An intuitive HAL+JSON library based on [HAL+JSON](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-11).
 
-# Usage
+# Install
 
-## Resource Management
+npm:<br/> `npm i halboy-ts`
+
+yarn:<br/> `yarn add halboy-ts`
+
+pnpm:<br/> `pnpm add halboy-ts`
+
+# Usage
 
 Creating and managing resources is very simple.
 
@@ -37,6 +43,8 @@ console.log(resource.toJson())
     - support for templated
   - embedded
     - support for arrays of resources
+  - fromJson
+    - support for arrays of resources 
 
 - Navigator
 - Test Support

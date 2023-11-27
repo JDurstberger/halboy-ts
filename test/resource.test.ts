@@ -270,7 +270,35 @@ describe('HAL Resource', () => {
 
       expect(resource.toJson()).toStrictEqual(json)
       expect(resource.getHref(relation)).toStrictEqual(url)
+    })
+
+    test('does not add _links as property', () => {
+      const relation = faker.lorem.word()
+      const url = randomProperty()
+      const json = {
+        _links: {
+          [relation]: { href: url },
+        },
+      }
+
+      const resource = Resource.fromJson(json)
+
       expect(resource.getProperty('_links')).toBeUndefined()
+    })
+
+    test('creates Resource with links from object', () => {
+      const relation = faker.lorem.word()
+      const url = randomProperty()
+      const json = {
+        _links: {
+          [relation]: [{ href: url }],
+        },
+      }
+
+      const resource = Resource.fromJson(json)
+
+      expect(resource.toJson()).toStrictEqual(json)
+      expect(resource.getHrefs(relation)).toStrictEqual([url])
     })
 
     test('creates Resource with embedded resource from object', () => {

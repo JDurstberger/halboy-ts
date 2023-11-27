@@ -64,3 +64,19 @@ jobs:
           cache: 'pnpm'
       - name: build
         run: rake build
+  pre-release:
+    environment: pre-release
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - uses: pnpm/action-setup@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+          cache: 'pnpm'
+      - name: pre-release
+        run: echo "TEST"

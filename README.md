@@ -2,7 +2,7 @@
 
 ![ci workflow](https://github.com/JDurstberger/halboy-ts/actions/workflows/ci.yml/badge.svg)
 
-An intuitive HAL+JSON library.
+An intuitive HAL+JSON library based on [HAL+JSON](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-11).
 
 # Usage
 

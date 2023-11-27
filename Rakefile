@@ -31,6 +31,10 @@ task :build => [:'dependencies:install'] do
   sh "pnpm build"
 end
 
+task :release => [:'dependencies:install', :'build'] do
+  sh 'pnpm publish'
+end
+
 namespace :version do
   task :bump, [:type] => [:'dependencies:install'] do |_, args|
     sh "npm run version:bump:#{args.type}" \

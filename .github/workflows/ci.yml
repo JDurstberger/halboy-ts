@@ -78,6 +78,7 @@ jobs:
         with:
           node-version: 21
           cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
       - name: configure-git
         run: ./ci-scripts/configure-git.sh
       - name: pre-release

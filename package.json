@@ -6,6 +6,9 @@
     "type": "git",
     "url": "https://github.com/JDurstberger/halboy-ts.git"
   },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": ["/build"],
   "packageManager": "pnpm@8.10.5",
   "scripts": {
     "formatting:check": "prettier . --check",

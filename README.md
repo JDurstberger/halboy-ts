@@ -37,7 +37,6 @@ console.log(resource.toJson())
     - support for templated
   - embedded
     - support for arrays of resources
-  - fromJson
 
 - Navigator
 - Test Support

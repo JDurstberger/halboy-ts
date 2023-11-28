@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { Resource } from './resource'
 import { halHttpClient } from './hal-http-client'
 
@@ -18,8 +17,10 @@ export class Navigator {
   async get(relation: string): Promise<Navigator> {
     const link = this.resource.getLink(relation)
 
-    if(!link) {
-      throw Error(`Link with relation '${relation}' does not exist on resource.`)
+    if (!link) {
+      throw Error(
+        `Link with relation '${relation}' does not exist on resource.`,
+      )
     }
 
     const response = await halHttpClient.get(link.href)

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Resource } from './resource'
 
 export type Response = {
-  status: number,
+  status: number
   resource: Resource
 }
 
@@ -23,5 +23,5 @@ const get = async (url: string): Promise<Response> => {
 }
 
 export const halHttpClient = {
-  get
+  get,
 }

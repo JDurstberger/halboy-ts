@@ -11,7 +11,6 @@ afterAll(() => server.close())
 beforeEach(() => server.resetHandlers())
 
 describe('navigator', () => {
-
   test('status is 200 when discovering endpoint succeeds', async () => {
     const url = 'https://example.com'
     server.use(http.get(url, () => HttpResponse.json({})))
@@ -23,7 +22,7 @@ describe('navigator', () => {
 
   test('resource is empty resource when discovering endpoint returns empty json object', async () => {
     const url = 'https://example.com'
-    const resource =  {}
+    const resource = {}
     server.use(http.get(url, () => HttpResponse.json(resource)))
 
     const navigator = await Navigator.discover(url)
@@ -36,7 +35,7 @@ describe('navigator', () => {
     const key = faker.lorem.word()
     const value = randomProperty()
     const url = 'https://example.com'
-    const resource =  {[key]: value}
+    const resource = { [key]: value }
     server.use(http.get(url, () => HttpResponse.json(resource)))
 
     const navigator = await Navigator.discover(url)
@@ -65,8 +64,8 @@ describe('navigator', () => {
     const linkUrl = 'https://example.com/somethings/123'
     const resource = {
       _links: {
-        [relation]: {href: linkUrl}
-      }
+        [relation]: { href: linkUrl },
+      },
     }
     server.use(http.get(url, () => HttpResponse.json(resource)))
     server.use(http.get(linkUrl, () => HttpResponse.json({})))
@@ -83,14 +82,16 @@ describe('navigator', () => {
     const linkUrl = 'https://example.com/somethings/123'
     const resource = {
       _links: {
-        [relation]: {href: linkUrl}
-      }
+        [relation]: { href: linkUrl },
+      },
     }
     const statusCode = faker.internet.httpStatusCode({
       types: ['clientError', 'serverError'],
     })
     server.use(http.get(url, () => HttpResponse.json(resource)))
-    server.use(http.get(linkUrl, () => HttpResponse.json({}, {status: statusCode})))
+    server.use(
+      http.get(linkUrl, () => HttpResponse.json({}, { status: statusCode })),
+    )
     const discoveryNavigator = await Navigator.discover(url)
 
     const navigator = await discoveryNavigator.get(relation)
@@ -104,12 +105,12 @@ describe('navigator', () => {
     const linkUrl = 'https://example.com/somethings/123'
     const resource = {
       _links: {
-        [relation]: {href: linkUrl}
-      }
+        [relation]: { href: linkUrl },
+      },
     }
     const key = faker.lorem.word()
     const value = randomProperty()
-    const linkedResource =  {[key]: value}
+    const linkedResource = { [key]: value }
     server.use(http.get(url, () => HttpResponse.json(resource)))
     server.use(http.get(linkUrl, () => HttpResponse.json(linkedResource)))
     const discoveryNavigator = await Navigator.discover(url)
@@ -127,6 +128,8 @@ describe('navigator', () => {
 
     const action = async () => await navigator.get(relation)
 
-    expect(action).rejects.toThrow(`Link with relation '${relation}' does not exist on resource.`)
+    expect(action).rejects.toThrow(
+      `Link with relation '${relation}' does not exist on resource.`,
+    )
   })
 })

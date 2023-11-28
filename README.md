@@ -48,3 +48,6 @@ console.log(resource.toJson())
 
 - Navigator
 - Test Support
+
+- Investigate jest retry
+- ESLint not erroring when function parameter type is missing

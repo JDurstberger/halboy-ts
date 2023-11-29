@@ -38,15 +38,28 @@ console.log(resource.toJson())
 
 - Resource
 
+  - properties
+    - batch add properties
   - links
     - support for deprecation
     - support for templated
+    - support for adding link object
+    - batch adding links
+    - appending links to existing relation?
   - embedded
     - support for arrays of resources
+    - batch adding resources
   - fromJson
     - support for arrays of resources
 
 - Navigator
+
+  - post
+  - patch
+  - put
+  - http options
+  - throw on error?
+
 - Test Support
 
 - Investigate jest retry

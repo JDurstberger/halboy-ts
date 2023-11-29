@@ -12,9 +12,9 @@ describe('HAL Resource', () => {
       .addLink('3', 'link')
       .addProperty('3', 'property')
 
-    const resource1Json = resource1.toJson()
-    const resource2Json = resource2.toJson()
-    const resource3Json = resource3.toJson()
+    const resource1Json = resource1.toObject()
+    const resource2Json = resource2.toObject()
+    const resource3Json = resource3.toObject()
 
     expect(resource1Json).not.toStrictEqual(resource2Json)
     expect(resource1Json).not.toStrictEqual(resource3Json)
@@ -167,121 +167,121 @@ describe('HAL Resource', () => {
       )
 
       const embeddedResource = resource.getResource(key)
-      expect(embeddedResource.toJson()).toStrictEqual(
-        expectedEmbeddedResource.toJson(),
+      expect(embeddedResource.toObject()).toStrictEqual(
+        expectedEmbeddedResource.toObject(),
       )
     })
   })
 
-  describe('to JSON', () => {
-    test('creates empty JSON for new resource', () => {
+  describe('to object', () => {
+    test('creates empty object for new resource', () => {
       const resource = Resource.create()
 
-      const json = resource.toJson()
+      const object = resource.toObject()
 
-      expect(json).toStrictEqual({})
+      expect(object).toStrictEqual({})
     })
 
-    test('creates JSON with link in _links', () => {
+    test('creates object with link in _links', () => {
       const relation = 'relation'
       const uri = 'https://example.com'
       const resource = Resource.create().addLink(relation, uri)
 
-      const json = resource.toJson()
+      const object = resource.toObject()
 
-      expect(json).toStrictEqual({
+      expect(object).toStrictEqual({
         _links: {
           relation: { href: uri },
         },
       })
     })
 
-    test('creates JSON with link array in _links', () => {
+    test('creates object with link array in _links', () => {
       const relation = 'relation'
       const uri = 'https://example.com'
       const resource = Resource.create().addLinks(relation, [uri, uri])
 
-      const json = resource.toJson()
+      const object = resource.toObject()
 
-      expect(json).toStrictEqual({
+      expect(object).toStrictEqual({
         _links: {
           relation: [{ href: uri }, { href: uri }],
         },
       })
     })
 
-    test('creates JSON with property', () => {
+    test('creates object with property', () => {
       const key = 'key'
       const value = 'value'
       const resource = Resource.create().addProperty(key, value)
 
-      const json = resource.toJson()
+      const object = resource.toObject()
 
-      expect(json).toStrictEqual({
+      expect(object).toStrictEqual({
         [key]: value,
       })
     })
 
-    test('creates JSON with embeddedResource', () => {
+    test('creates object with embeddedResource', () => {
       const key = 'key'
       const embeddedResource = Resource.create(faker.internet.url())
       const resource = Resource.create().addResource('key', embeddedResource)
 
-      const json = resource.toJson()
+      const object = resource.toObject()
 
-      expect(json).toStrictEqual({
+      expect(object).toStrictEqual({
         _embedded: {
-          [key]: embeddedResource.toJson(),
+          [key]: embeddedResource.toObject(),
         },
       })
     })
   })
 
-  describe('from JSON', () => {
+  describe('from object', () => {
     test('creates empty Resource from empty object', () => {
-      const json = {}
+      const object = {}
 
-      const resource = Resource.fromJson(json)
+      const resource = Resource.fromObject(object)
 
-      expect(resource.toJson()).toStrictEqual(json)
+      expect(resource.toObject()).toStrictEqual(object)
     })
 
     test('creates Resource with property from object', () => {
       const key = faker.lorem.word()
       const value = randomProperty()
-      const json = { [key]: value }
+      const object = { [key]: value }
 
-      const resource = Resource.fromJson(json)
+      const resource = Resource.fromObject(object)
 
-      expect(resource.toJson()).toStrictEqual(json)
+      expect(resource.toObject()).toStrictEqual(object)
       expect(resource.getProperty(key)).toStrictEqual(value)
     })
 
     test('creates Resource with link from object', () => {
       const relation = faker.lorem.word()
       const url = randomProperty()
-      const json = {
+      const object = {
         _links: {
           [relation]: { href: url },
         },
       }
 
-      const resource = Resource.fromJson(json)
+      const resource = Resource.fromObject(object)
 
-      expect(resource.toJson()).toStrictEqual(json)
+      expect(resource.toObject()).toStrictEqual(object)
       expect(resource.getHref(relation)).toStrictEqual(url)
     })
 
     test('does not add _links as property', () => {
       const relation = faker.lorem.word()
       const url = randomProperty()
-      const json = {
+      const object = {
         _links: {
           [relation]: { href: url },
         },
       }
 
-      const resource = Resource.fromJson(json)
+      const resource = Resource.fromObject(object)
 
       expect(resource.getProperty('_links')).toBeUndefined()
     })
@@ -289,15 +289,15 @@ describe('HAL Resource', () => {
     test('creates Resource with links from object', () => {
       const relation = faker.lorem.word()
       const url = randomProperty()
-      const json = {
+      const object = {
         _links: {
           [relation]: [{ href: url }],
         },
       }
 
-      const resource = Resource.fromJson(json)
+      const resource = Resource.fromObject(object)
 
-      expect(resource.toJson()).toStrictEqual(json)
+      expect(resource.toObject()).toStrictEqual(object)
       expect(resource.getHrefs(relation)).toStrictEqual([url])
     })
 
@@ -318,10 +318,10 @@ describe('HAL Resource', () => {
         },
       }
 
-      const resource = Resource.fromJson(json)
+      const resource = Resource.fromObject(json)
 
       const embeddedResource = resource.getResource(embeddedResourceKey)
-      expect(resource.toJson()).toStrictEqual(json)
+      expect(resource.toObject()).toStrictEqual(json)
       expect(resource.getProperty('_links')).toBeUndefined()
       expect(resource.getProperty('_embedded')).toBeUndefined()
       expect(embeddedResource.getHref(embeddedResourceRelation)).toStrictEqual(

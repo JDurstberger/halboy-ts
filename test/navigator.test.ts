@@ -28,7 +28,7 @@ describe('navigator', () => {
     const navigator = await Navigator.discover(url)
 
     expect(navigator.status).toBe(200)
-    expect(navigator.resource.toJson()).toStrictEqual(resource)
+    expect(navigator.resource.toObject()).toStrictEqual(resource)
   })
 
   test('resource has property when discovering endpoint succeeds with json with property', async () => {

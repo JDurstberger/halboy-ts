@@ -11,7 +11,7 @@ const get = async (url: string): Promise<Response> => {
     const response = await axios.get(url)
     return {
       status: response.status,
-      resource: Resource.fromJson(response.data),
+      resource: Resource.fromObject(response.data),
     }
   } catch (rawError) {
     const error = rawError.toJSON()

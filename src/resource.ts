@@ -31,13 +31,13 @@ export class Resource {
     return selfUrl ? resource.addLink('self', selfUrl) : resource
   }
 
-  static fromJson(json: object): Resource {
+  static fromObject(json: object): Resource {
     const links = json['_links'] ?? {}
     const embedded: { [key: string]: object } = json['_embedded'] ?? {}
     const properties = { ...json }
     delete properties['_links']
     delete properties['_embedded']
-    const resources = mapObject(embedded, (e) => this.fromJson(e))
+    const resources = mapObject(embedded, (e) => this.fromObject(e))
     return new Resource(links, properties, resources)
   }
 
@@ -110,7 +110,7 @@ export class Resource {
     return this._embedded[key]
   }
 
-  toJson(): object {
+  toObject(): object {
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const json: Record<string, any> = {
       ...this._properties,
@@ -121,7 +121,7 @@ export class Resource {
 
     if (!isEmpty(this._embedded))
       json['_embedded'] = mapObject(this._embedded, (resource) =>
-        resource.toJson(),
+        resource.toObject(),
       )
 
     return json

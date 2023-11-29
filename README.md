@@ -52,7 +52,6 @@ console.log(resource.toJson())
     - immutability when adding
     - immutability when returning
   - fromObject
-    - support for arrays of resources
     - validation?
 
 - Navigator

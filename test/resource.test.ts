@@ -174,12 +174,16 @@ describe('HAL Resource', () => {
 
     test('throws when accessing array of resources with getResource', () => {
       const key = faker.lorem.word()
-      const resources = [Resource.create(faker.internet.url()), Resource.create(faker.internet.url())]
+      const resources = [
+        Resource.create(faker.internet.url()),
+        Resource.create(faker.internet.url()),
+      ]
 
-      const resource = Resource.create().addResources(key, resources,
+      const resource = Resource.create().addResources(key, resources)
+
+      expect(() => resource.getResource(key)).toThrow(
+        `${key} is an array of resources.`,
       )
-
-      expect(() => resource.getResource(key)).toThrow(`${key} is an array of resources.`)
     })
 
     test('returns array of resources for added array of resources', () => {
@@ -187,15 +191,16 @@ describe('HAL Resource', () => {
       const embeddedResource1 = Resource.create(faker.internet.url())
       const embeddedResource2 = Resource.create(faker.internet.url())
 
-      const resource = Resource.create().addResources(
-        key,
-        [embeddedResource1, embeddedResource2],
-      )
+      const resource = Resource.create().addResources(key, [
+        embeddedResource1,
+        embeddedResource2,
+      ])
 
       const embeddedResources = resource.getResources(key)
-      expect(embeddedResources).toStrictEqual(
-        [embeddedResource1, embeddedResource2],
-      )
+      expect(embeddedResources).toStrictEqual([
+        embeddedResource1,
+        embeddedResource2,
+      ])
     })
 
     test('throws when accessing resource with getResources', () => {
@@ -204,7 +209,9 @@ describe('HAL Resource', () => {
 
       const resource = Resource.create().addResource(key, embeddedResource)
 
-      expect(() => resource.getResources(key)).toThrow(`${key} is not an array of resources.`)
+      expect(() => resource.getResources(key)).toThrow(
+        `${key} is not an array of resources.`,
+      )
     })
   })
 
@@ -364,6 +371,29 @@ describe('HAL Resource', () => {
       )
       expect(
         embeddedResource.getProperty(embeddedResourcePropertyKey),
+      ).toStrictEqual(embeddedResourcePropertyValue)
+    })
+
+    test('creates Resource with embedded array of resources from object', () => {
+      const embeddedResourceKey = faker.lorem.word()
+      const embeddedResourcePropertyKey = faker.lorem.word()
+      const embeddedResourcePropertyValue = randomProperty()
+      const json = {
+        _embedded: {
+          [embeddedResourceKey]: [
+            {
+              [embeddedResourcePropertyKey]: embeddedResourcePropertyValue,
+            },
+          ],
+        },
+      }
+
+      const resource = Resource.fromObject(json)
+
+      const embeddedResources = resource.getResources(embeddedResourceKey)
+      expect(embeddedResources).toHaveLength(1)
+      expect(
+        embeddedResources[0].getProperty(embeddedResourcePropertyKey),
       ).toStrictEqual(embeddedResourcePropertyValue)
     })
   })

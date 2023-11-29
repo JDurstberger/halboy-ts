@@ -37,7 +37,13 @@ export class Resource {
     const properties = { ...json }
     delete properties['_links']
     delete properties['_embedded']
-    const resources = mapObject(embedded, (e) => this.fromObject(e))
+    const resources = mapObject(
+      embedded,
+      (embeddedResource: object | object[]) =>
+        Array.isArray(embeddedResource)
+          ? embeddedResource.map((e: object) => this.fromObject(e))
+          : this.fromObject(embeddedResource),
+    )
     return new Resource(links, properties, resources)
   }
 
@@ -106,19 +112,15 @@ export class Resource {
     })
   }
 
-  addResources(key: string, resources: Resource[]) : Resource {
-    return new Resource(
-      this._links,
-      this._properties,
-      {
-        ...this._embedded,
-        [key]: resources
-      }
-    )
+  addResources(key: string, resources: Resource[]): Resource {
+    return new Resource(this._links, this._properties, {
+      ...this._embedded,
+      [key]: resources,
+    })
   }
 
   getResource(key: string): Resource | undefined {
-    const embedded =  this._embedded[key]
+    const embedded = this._embedded[key]
     if (embedded) {
       if (Array.isArray(embedded)) {
         throw Error(`${key} is an array of resources.`)
@@ -128,7 +130,7 @@ export class Resource {
   }
 
   getResources(key: string): Resource[] | undefined {
-    const embedded =  this._embedded[key]
+    const embedded = this._embedded[key]
     if (embedded) {
       if (Array.isArray(embedded)) {
         return embedded
@@ -148,7 +150,9 @@ export class Resource {
 
     if (!isEmpty(this._embedded))
       json['_embedded'] = mapObject(this._embedded, (resource) =>
-        Array.isArray(resource) ? resource.map(r => r.toObject()) : resource.toObject()
+        Array.isArray(resource)
+          ? resource.map((r) => r.toObject())
+          : resource.toObject(),
       )
 
     return json

@@ -9,7 +9,7 @@ export type Property =
   | Property[]
   | { [key: string]: Property }
 export type Properties = { [key: string]: Property }
-export type EmbeddedResources = { [key: string]: Resource }
+type EmbeddedResources = { [key: string]: Resource | Resource[] }
 export class Resource {
   private readonly _links: Links
   private readonly _properties: Properties
@@ -106,8 +106,35 @@ export class Resource {
     })
   }
 
+  addResources(key: string, resources: Resource[]) : Resource {
+    return new Resource(
+      this._links,
+      this._properties,
+      {
+        ...this._embedded,
+        [key]: resources
+      }
+    )
+  }
+
   getResource(key: string): Resource | undefined {
-    return this._embedded[key]
+    const embedded =  this._embedded[key]
+    if (embedded) {
+      if (Array.isArray(embedded)) {
+        throw Error(`${key} is an array of resources.`)
+      }
+      return embedded
+    }
+  }
+
+  getResources(key: string): Resource[] | undefined {
+    const embedded =  this._embedded[key]
+    if (embedded) {
+      if (Array.isArray(embedded)) {
+        return embedded
+      }
+      throw Error(`${key} is not an array of resources.`)
+    }
   }
 
   toObject(): object {
@@ -121,7 +148,7 @@ export class Resource {
 
     if (!isEmpty(this._embedded))
       json['_embedded'] = mapObject(this._embedded, (resource) =>
-        resource.toObject(),
+        Array.isArray(resource) ? resource.map(r => r.toObject()) : resource.toObject()
       )
 
     return json

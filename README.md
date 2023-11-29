@@ -49,8 +49,11 @@ console.log(resource.toJson())
   - embedded
     - support for arrays of resources
     - batch adding resources
-  - fromJson
+    - immutability when adding
+    - immutability when returning
+  - fromObject
     - support for arrays of resources
+    - validation?
 
 - Navigator
 

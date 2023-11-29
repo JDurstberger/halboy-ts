@@ -171,6 +171,41 @@ describe('HAL Resource', () => {
         expectedEmbeddedResource.toObject(),
       )
     })
+
+    test('throws when accessing array of resources with getResource', () => {
+      const key = faker.lorem.word()
+      const resources = [Resource.create(faker.internet.url()), Resource.create(faker.internet.url())]
+
+      const resource = Resource.create().addResources(key, resources,
+      )
+
+      expect(() => resource.getResource(key)).toThrow(`${key} is an array of resources.`)
+    })
+
+    test('returns array of resources for added array of resources', () => {
+      const key = faker.lorem.word()
+      const embeddedResource1 = Resource.create(faker.internet.url())
+      const embeddedResource2 = Resource.create(faker.internet.url())
+
+      const resource = Resource.create().addResources(
+        key,
+        [embeddedResource1, embeddedResource2],
+      )
+
+      const embeddedResources = resource.getResources(key)
+      expect(embeddedResources).toStrictEqual(
+        [embeddedResource1, embeddedResource2],
+      )
+    })
+
+    test('throws when accessing resource with getResources', () => {
+      const key = faker.lorem.word()
+      const embeddedResource = Resource.create(faker.internet.url())
+
+      const resource = Resource.create().addResource(key, embeddedResource)
+
+      expect(() => resource.getResources(key)).toThrow(`${key} is not an array of resources.`)
+    })
   })
 
   describe('to object', () => {

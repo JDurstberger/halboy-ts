@@ -16,13 +16,15 @@ describe('navigator', () => {
       const url = 'https://example.com'
       const headerKey = faker.lorem.word()
       const headerValue = faker.lorem.word()
-      const headers = {[headerKey]: headerValue}
+      const headers = { [headerKey]: headerValue }
       server.use(http.get(url, () => HttpResponse.json({})))
 
-      await Navigator.discover(url, {headers})
+      await Navigator.discover(url, { headers })
 
       expect(server.recordedRequests).toHaveLength(1)
-      expect(server.recordedRequests[0].headers.get(headerKey)).toStrictEqual(headerValue)
+      expect(server.recordedRequests[0].headers.get(headerKey)).toStrictEqual(
+        headerValue,
+      )
     })
 
     test('status is 200 when discovering endpoint succeeds', async () => {

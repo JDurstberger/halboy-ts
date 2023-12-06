@@ -2,13 +2,12 @@ import { SetupServer, setupServer } from 'msw/node'
 import { RequestHandler } from 'msw/lib/core/handlers/RequestHandler'
 
 export class MockServer {
-
   private readonly server: SetupServer
   readonly recordedRequests: Array<Request> = []
 
   constructor(...handlers: Array<RequestHandler>) {
     this.server = setupServer(...handlers)
-    this.server.events.on('request:start', ({request}) => {
+    this.server.events.on('request:start', ({ request }) => {
       this.recordedRequests.push(request)
     })
   }
@@ -27,6 +26,4 @@ export class MockServer {
   use(...handlers: Array<RequestHandler>) {
     this.server.use(...handlers)
   }
-
-
 }

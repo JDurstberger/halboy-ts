@@ -1,6 +1,10 @@
 import { Resource } from './resource'
 import { halHttpClient } from './hal-http-client'
 
+export type Options = {
+  headers?: { [key: string]: string }
+}
+
 export class Navigator {
   readonly status: number
   readonly resource: Resource
@@ -9,8 +13,8 @@ export class Navigator {
     this.resource = resource
   }
 
-  static async discover(url: string): Promise<Navigator> {
-    const response = await halHttpClient.get(url)
+  static async discover(url: string, options?: Options): Promise<Navigator> {
+    const response = await halHttpClient.get(url, options)
     return new Navigator(response.status, response.resource)
   }
 

@@ -6,9 +6,13 @@ export type Response = {
   resource: Resource
 }
 
-const get = async (url: string): Promise<Response> => {
+export type Options = {
+  headers?: { [key: string]: string }
+}
+
+const get = async (url: string, options?: Options): Promise<Response> => {
   try {
-    const response = await axios.get(url)
+    const response = await axios.get(url, options)
     return {
       status: response.status,
       resource: Resource.fromObject(response.data),

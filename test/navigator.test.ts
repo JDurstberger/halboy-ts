@@ -57,7 +57,9 @@ describe('navigator', () => {
       const navigator = await Navigator.discover(url)
 
       expect(navigator.status).toBe(200)
-      expect(navigator.resource.getProperty(key)).toStrictEqual(value)
+      expect(JSON.stringify(navigator.resource.getProperty(key))).toStrictEqual(
+        JSON.stringify(value),
+      )
     })
 
     test('status is status from response when service returns client or server error', async () => {

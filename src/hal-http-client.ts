@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { Resource } from './resource'
 
 export type Response = {
@@ -11,18 +10,16 @@ export type Options = {
 }
 
 const get = async (url: string, options?: Options): Promise<Response> => {
-  try {
-    const response = await axios.get(url, options)
-    return {
-      status: response.status,
-      resource: Resource.fromObject(response.data),
-    }
-  } catch (rawError) {
-    const error = rawError.toJSON()
-    return {
-      status: error.status,
-      resource: Resource.create(),
-    }
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      ...options?.headers,
+    },
+  })
+  const jsonBody = await response.json()
+  return {
+    status: response.status,
+    resource: Resource.fromObject(jsonBody),
   }
 }
 

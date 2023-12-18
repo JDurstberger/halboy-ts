@@ -137,7 +137,9 @@ describe('navigator', () => {
 
       const navigator = await discoveryNavigator.get(relation)
 
-      expect(JSON.stringify(navigator.resource.getProperty(key))).toStrictEqual(JSON.stringify(value))
+      expect(JSON.stringify(navigator.resource.getProperty(key))).toStrictEqual(
+        JSON.stringify(value),
+      )
     })
 
     test('throws when attempting to get link that does not exist on resource', async () => {

@@ -12,7 +12,7 @@ jobs:
       - uses: ./.github/actions/prepare-ruby
       - uses: ./.github/actions/prepare-nodejs
       - name: check formatting
-        run: go lib:formatting:check
+        run: ./go lib:formatting:check
 
   lint:
     runs-on: ubuntu-latest
@@ -21,7 +21,8 @@ jobs:
       - uses: ./.github/actions/prepare-ruby
       - uses: ./.github/actions/prepare-nodejs
       - name: lint
-        run: go lib:lint:check
+        shell: bash
+        run: ./go lib:lint:check
 
   test:
     runs-on: ubuntu-latest
@@ -30,7 +31,8 @@ jobs:
       - uses: ./.github/actions/prepare-ruby
       - uses: ./.github/actions/prepare-nodejs
       - name: run tests
-        run: rake lib:test
+        shell: bash
+        run: ./go lib:test
 
   build:
     needs: [check-formatting, lint, test]
@@ -40,7 +42,8 @@ jobs:
       - uses: ./.github/actions/prepare-ruby
       - uses: ./.github/actions/prepare-nodejs
       - name: build
-        run: rake lib:build
+        shell: bash
+        run: ./go lib:build
 
   pre-release:
     environment: pre-release

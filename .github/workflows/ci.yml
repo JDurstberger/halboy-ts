@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/shared/prepare-ruby
-      - uses: ./.github/actions/shared/prepare-nodejs
+      - uses: ./.github/actions/prepare-ruby
+      - uses: ./.github/actions/prepare-nodejs
       - name: check formatting
         run: go lib:formatting:check
 
@@ -20,8 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/shared/prepare-ruby
-      - uses: ./.github/actions/shared/prepare-nodejs
+      - uses: ./.github/actions/prepare-ruby
+      - uses: ./.github/actions/prepare-nodejs
       - name: lint
         run: go lib:lint:check
 
@@ -29,8 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/shared/prepare-ruby
-      - uses: ./.github/actions/shared/prepare-nodejs
+      - uses: ./.github/actions/prepare-ruby
+      - uses: ./.github/actions/prepare-nodejs
       - name: run tests
         run: rake lib:test
 
@@ -39,8 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/shared/prepare-ruby
-      - uses: ./.github/actions/shared/prepare-nodejs
+      - uses: ./.github/actions/prepare-ruby
+      - uses: ./.github/actions/prepare-nodejs
       - name: build
         run: rake lib:build
 
@@ -50,8 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/shared/prepare-ruby
-      - uses: ./.github/actions/shared/prepare-nodejs
+      - uses: ./.github/actions/prepare-ruby
+      - uses: ./.github/actions/prepare-nodejs
       - name: configure-git
         run: ./ci-scripts/configure-git.sh
       - name: pre-release

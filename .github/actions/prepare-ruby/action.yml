@@ -7,7 +7,7 @@ runs:
     - name: set ruby version
       shell: bash
       run: |
-        echo "RUBY_VERSION=$(./scripts/tool-version.sh ruby)" >> "$GITHUB_ENV"
+        echo "RUBY_VERSION=$(./ci-scripts/tool-version.sh ruby)" >> "$GITHUB_ENV"
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ env.RUBY_VERSION }}

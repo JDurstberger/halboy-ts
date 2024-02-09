@@ -7,7 +7,7 @@ runs:
     - name: set node version
       shell: bash
       run: echo "NODE_VERSION=$(./scripts/tool-version.sh nodejs)" >> "$GITHUB_ENV"
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v3
     - uses: actions/setup-node@v4
       with:
         node-version: ${{ env.NODE_VERSION }}

@@ -1,18 +1,35 @@
 require 'json'
 require 'open3'
 
+module Command
+  class << self
+    def run(command, environment = {})
+      stdout_str, status = Open3.capture2(environment.transform_keys(&:to_s), command)
+      unless status.success?
+        raise("Failed to run:\n #{command}")
+      end
+      stdout_str
+    end
+  end
+end
+
 namespace :lib do
+  task :install do |_|
+    puts "Installing dependencies"
+    puts Command.run("pnpm install")
+  end
+
   scripts = JSON.parse(File.read('package.json'))['scripts'].keys
   scripts.each do |script|
     desc "Task based on package.json script: #{script}"
     task "#{script}" do
+      Rake::Task["lib:install"].invoke
       sh "pnpm #{script}"
     end
   end
 end
 
 namespace :version do
-
   desc "Bump version"
   task :bump, [:release] do |_, args|
     args.with_defaults(release: 'prerelease')
@@ -33,16 +50,3 @@ namespace :version do
 end
 
 task :default => [:'lib:formatting:fix', 'lib:lint', 'lib:test']
-
-
-module Command
-  class << self
-    def run(command, environment = {})
-      stdout_str, status = Open3.capture2(environment.transform_keys(&:to_s), command)
-      unless status.success?
-        raise("Failed to run:\n #{command}")
-      end
-      stdout_str
-    end
-  end
-end

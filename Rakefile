@@ -4,11 +4,11 @@ require 'open3'
 module Command
   class << self
     def run(command, environment = {})
-      stdout_str, status = Open3.capture2(environment.transform_keys(&:to_s), command)
+      out, status = Open3.capture2e(environment.transform_keys(&:to_s), command)
       unless status.success?
         raise("Failed to run:\n #{command}")
       end
-      stdout_str
+      out
     end
   end
 end

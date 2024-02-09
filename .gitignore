@@ -2,3 +2,7 @@ node_modules/
 .idea/
 
 build/
+
+#CI ruby directories
+.bundle/
+vendor/

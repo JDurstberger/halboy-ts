@@ -1,0 +1,14 @@
+name: 'Prepare Ruby'
+description: 'Prepare ruby'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: set ruby version
+      shell: bash
+      run: |
+        echo "RUBY_VERSION=$(./scripts/tool-version.sh ruby)" >> "$GITHUB_ENV"
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ env.RUBY_VERSION }}
+        bundler-cache: true

@@ -16,10 +16,10 @@
   "scripts": {
     "formatting:check": "prettier . --check",
     "formatting:fix": "prettier . --write",
-    "lint": "eslint .",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "jest",
-    "build": "tsc",
-    "version:bump:pre": "npm version prerelease --preid=pre"
+    "build": "tsc"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",

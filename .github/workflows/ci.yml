@@ -11,74 +11,47 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 21
-          cache: 'pnpm'
+      - uses: ./.github/actions/shared/prepare-ruby
+      - uses: ./.github/actions/shared/prepare-nodejs
       - name: check formatting
-        run: rake formatting:check
+        run: go lib:formatting:check
+
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 21
-          cache: 'pnpm'
+      - uses: ./.github/actions/shared/prepare-ruby
+      - uses: ./.github/actions/shared/prepare-nodejs
       - name: lint
-        run: rake lint
+        run: go lib:lint:check
+
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 21
-          cache: 'pnpm'
+      - uses: ./.github/actions/shared/prepare-ruby
+      - uses: ./.github/actions/shared/prepare-nodejs
       - name: run tests
-        run: rake test
+        run: rake lib:test
+
   build:
     needs: [check-formatting, lint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 21
-          cache: 'pnpm'
+      - uses: ./.github/actions/shared/prepare-ruby
+      - uses: ./.github/actions/shared/prepare-nodejs
       - name: build
-        run: rake build
+        run: rake lib:build
+
   pre-release:
     environment: pre-release
     needs: [build]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - uses: pnpm/action-setup@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 21
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
+      - uses: ./.github/actions/shared/prepare-ruby
+      - uses: ./.github/actions/shared/prepare-nodejs
       - name: configure-git
         run: ./ci-scripts/configure-git.sh
       - name: pre-release

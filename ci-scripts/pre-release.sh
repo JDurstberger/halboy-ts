@@ -4,8 +4,8 @@
 set -e
 set -o pipefail
 
-rake version:bump[pre]
-rake release
+go version:bump[pre]
+go release
 
 git push --all
 git push --tags

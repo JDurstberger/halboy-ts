@@ -27,6 +27,10 @@ namespace :lib do
       sh "pnpm #{script}"
     end
   end
+
+  task :publish do |_|
+    puts Command.run("pnpm publish")
+  end
 end
 
 namespace :version do

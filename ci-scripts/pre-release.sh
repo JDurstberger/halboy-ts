@@ -5,6 +5,7 @@ set -e
 set -o pipefail
 
 ./go version:bump
+git status
 pnpm publish
 
 git push --all

@@ -4,7 +4,7 @@
 set -e
 set -o pipefail
 
-./go version:bump[pre]
+./go version:bump
 ./go lib:publish
 
 git push --all

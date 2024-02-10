@@ -284,7 +284,9 @@ describe('navigator', () => {
       server.use(http.get(url, () => HttpResponse.json(resource)))
       server.use(http.post(linkUrl, () => HttpResponse.json({})))
 
-      await Navigator.discover(url, { headers }).then((n) => n.post(relation, {}))
+      await Navigator.discover(url, { headers }).then((n) =>
+        n.post(relation, {}),
+      )
 
       expect(server.recordedRequests).toHaveLength(2)
       expect(server.recordedRequests[1].headers.get(headerKey)).toStrictEqual(

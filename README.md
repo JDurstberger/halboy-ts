@@ -81,7 +81,6 @@ console.log(resource.toJson())
   - patch
   - put
   - http options
-  - support for path parameters
-  - support for query parameters
+  - support for link templates as per [RFC 6570](https://datatracker.ietf.org/doc/html/rfc6570)
 
 - Test Support

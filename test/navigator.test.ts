@@ -167,6 +167,29 @@ describe('navigator', () => {
 
       expect(navigator.status).toBe(500)
     })
+
+    test('carries headers from discovery over to get call', async () => {
+      const relation = faker.lorem.word()
+      const url = 'https://example.com'
+      const linkUrl = 'https://example.com/somethings/123'
+      const resource = {
+        _links: {
+          [relation]: { href: linkUrl },
+        },
+      }
+      const headerKey = faker.lorem.word()
+      const headerValue = faker.lorem.word()
+      const headers = { [headerKey]: headerValue }
+      server.use(http.get(url, () => HttpResponse.json(resource)))
+      server.use(http.get(linkUrl, () => HttpResponse.json({})))
+
+      await Navigator.discover(url, { headers }).then((n) => n.get(relation))
+
+      expect(server.recordedRequests).toHaveLength(2)
+      expect(server.recordedRequests[1].headers.get(headerKey)).toStrictEqual(
+        headerValue,
+      )
+    })
   })
 
   describe('post', () => {
@@ -181,10 +204,13 @@ describe('navigator', () => {
       }
       const body = { name: faker.lorem.word() }
       server.use(http.get(url, () => HttpResponse.json(resource)))
-      server.use(http.post(createThingUrl, () => HttpResponse.json({}, {status: 201})))
+      server.use(
+        http.post(createThingUrl, () => HttpResponse.json({}, { status: 201 })),
+      )
 
-     const navigator = await Navigator.discover(url)
-       .then((navigator) => navigator.post(relation, body))
+      const navigator = await Navigator.discover(url).then((navigator) =>
+        navigator.post(relation, body),
+      )
 
       const createRequest = server.recordedRequests[1]
       expect(server.recordedRequests).toHaveLength(2)
@@ -206,11 +232,14 @@ describe('navigator', () => {
       })
       server.use(
         http.get(url, () => HttpResponse.json(resource)),
-        http.post(createThingUrl, () => HttpResponse.json({}, { status: statusCode })),
+        http.post(createThingUrl, () =>
+          HttpResponse.json({}, { status: statusCode }),
+        ),
       )
 
-      const navigator = await Navigator.discover(url)
-        .then(navigator => navigator.post(relation, {}))
+      const navigator = await Navigator.discover(url).then((navigator) =>
+        navigator.post(relation, {}),
+      )
 
       expect(navigator.status).toBe(statusCode)
     })
@@ -238,6 +267,29 @@ describe('navigator', () => {
       )
 
       expect(navigator.status).toBe(500)
+    })
+
+    test('carries headers from discovery over to post call', async () => {
+      const relation = faker.lorem.word()
+      const url = 'https://example.com'
+      const linkUrl = 'https://example.com/somethings/123'
+      const resource = {
+        _links: {
+          [relation]: { href: linkUrl },
+        },
+      }
+      const headerKey = faker.lorem.word()
+      const headerValue = faker.lorem.word()
+      const headers = { [headerKey]: headerValue }
+      server.use(http.get(url, () => HttpResponse.json(resource)))
+      server.use(http.post(linkUrl, () => HttpResponse.json({})))
+
+      await Navigator.discover(url, { headers }).then((n) => n.post(relation, {}))
+
+      expect(server.recordedRequests).toHaveLength(2)
+      expect(server.recordedRequests[1].headers.get(headerKey)).toStrictEqual(
+        headerValue,
+      )
     })
   })
 })

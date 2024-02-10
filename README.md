@@ -70,12 +70,14 @@ console.log(resource.toJson())
 # TODO
 
 - Resource
+
   - links
     - support for other link props
   - embedded
     - batch adding resources
 
 - Navigator
+
   - patch
   - put
   - http options

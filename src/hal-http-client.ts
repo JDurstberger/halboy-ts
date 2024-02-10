@@ -9,7 +9,7 @@ export type Options = {
   headers?: { [key: string]: string }
 }
 
-const get = async (url: string, options?: Options): Promise<Response> => {
+const get = async (url: string, options: Options): Promise<Response> => {
   const response = await fetch(url, {
     method: 'GET',
     headers: {
@@ -23,12 +23,16 @@ const get = async (url: string, options?: Options): Promise<Response> => {
   }
 }
 
-const post = async (url: string, body: unknown, options?: Options): Promise<Response> => {
+const post = async (
+  url: string,
+  body: unknown,
+  options: Options,
+): Promise<Response> => {
   const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: {
-      ...options?.headers,
+      ...options.headers,
     },
   })
   const jsonBody = await response.json()
@@ -40,5 +44,5 @@ const post = async (url: string, body: unknown, options?: Options): Promise<Resp
 
 export const halHttpClient = {
   get,
-  post
+  post,
 }

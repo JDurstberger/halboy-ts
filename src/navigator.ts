@@ -8,14 +8,17 @@ export type Options = {
 export class Navigator {
   readonly status: number
   readonly resource: Resource
-  private constructor(status: number, resource: Resource) {
+  private readonly options: Options
+
+  private constructor(status: number, resource: Resource, options: Options) {
     this.status = status
     this.resource = resource
+    this.options = options
   }
 
   static async discover(url: string, options?: Options): Promise<Navigator> {
-    const response = await halHttpClient.get(url, options)
-    return new Navigator(response.status, response.resource)
+    const response = await halHttpClient.get(url, options ?? {})
+    return new Navigator(response.status, response.resource, options ?? {})
   }
 
   async get(relation: string): Promise<Navigator> {
@@ -30,8 +33,8 @@ export class Navigator {
       )
     }
 
-    const response = await halHttpClient.get(link.href)
-    return new Navigator(response.status, response.resource)
+    const response = await halHttpClient.get(link.href, this.options)
+    return new Navigator(response.status, response.resource, this.options)
   }
 
   async post(relation: string, body: unknown): Promise<Navigator> {
@@ -46,7 +49,7 @@ export class Navigator {
       )
     }
 
-    const response = await halHttpClient.post(link!.href, body)
-    return new Navigator(response.status, response.resource)
+    const response = await halHttpClient.post(link!.href, body, this.options)
+    return new Navigator(response.status, response.resource, this.options)
   }
 }

@@ -54,6 +54,14 @@ export class Resource {
     )
   }
 
+  batchAddLinks(links: {[key: string]: string}): Resource {
+    return new Resource(
+      { ...this._links, ...mapObject(links, hrefToLink) },
+      this._properties,
+      this._embedded,
+    )
+  }
+
   addLinks(relation: string, hrefs: string[]): Resource {
     return new Resource(
       { ...this._links, [relation]: hrefs.map(hrefToLink) },

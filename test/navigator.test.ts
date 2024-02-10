@@ -1,3 +1,4 @@
+import { describe, test, beforeAll, afterAll, beforeEach, expect } from 'vitest'
 import { Navigator } from '../src'
 import { http, HttpResponse } from 'msw'
 import { faker } from '@faker-js/faker'
@@ -108,8 +109,8 @@ describe('navigator', () => {
       const statusCode = faker.internet.httpStatusCode({
         types: ['clientError', 'serverError'],
       })
-      server.use(http.get(url, () => HttpResponse.json(resource)))
       server.use(
+        http.get(url, () => HttpResponse.json(resource)),
         http.get(linkUrl, () => HttpResponse.json({}, { status: statusCode })),
       )
       const discoveryNavigator = await Navigator.discover(url)
@@ -153,6 +154,19 @@ describe('navigator', () => {
       expect(action).rejects.toThrow(
         `Link with relation '${relation}' does not exist on resource.`,
       )
+    })
+
+    test('returns discovery error and does not attempt get when discovery fails before get', async () => {
+      const relation = 'non-existent-relation'
+      const url = 'https://example.com'
+      server.use(
+        http.get(url, () => HttpResponse.json({}, { status: 500 }))
+      )
+
+      const navigator = await Navigator.discover(url)
+        .then(navigator => navigator.get(relation))
+
+      expect(navigator.status).toBe(500)
     })
   })
 })

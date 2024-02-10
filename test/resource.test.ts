@@ -1,3 +1,4 @@
+import { describe, test, expect } from 'vitest'
 import { faker } from '@faker-js/faker'
 import { Resource } from '../src'
 import { randomProperty } from './data'

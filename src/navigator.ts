@@ -19,6 +19,10 @@ export class Navigator {
   }
 
   async get(relation: string): Promise<Navigator> {
+    if(this.status !== 200) {
+      return this;
+    }
+
     const link = this.resource.getLink(relation)
 
     if (!link) {

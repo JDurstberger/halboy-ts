@@ -98,6 +98,17 @@ export class Resource {
     )
   }
 
+  batchAddProperties(properties: Properties): Resource {
+    return new Resource(
+      this._links,
+      {
+        ...this._properties,
+        ...structuredClone(properties)
+      },
+      this._embedded,
+    )
+  }
+
   getProperty(key: string): Property {
     return this._properties[key]
   }

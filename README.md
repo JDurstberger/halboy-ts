@@ -1,8 +1,8 @@
 # halboy-ts
+An intuitive [HAL+JSON](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-11) library.
 
+---
 ![ci workflow](https://github.com/JDurstberger/halboy-ts/actions/workflows/ci.yml/badge.svg)
-
-An intuitive HAL+JSON library based on [HAL+JSON](https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-11).
 
 # Install
 
@@ -61,10 +61,9 @@ console.log(resource.toJson())
 //}
 ```
 
-## TODO
+# TODO
 
 - Resource
-
   - properties
     - batch add properties
   - links
@@ -83,8 +82,4 @@ console.log(resource.toJson())
   - support for path parameters
   - support for query parameters
 
-- Link Building?
-
 - Test Support
-
-- ESLint not erroring when function parameter type is missing

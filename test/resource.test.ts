@@ -180,6 +180,23 @@ describe('HAL Resource', () => {
 
       expect(property).toStrictEqual(value)
     })
+
+    test('returns values for batch added properties', () => {
+      const key1 = faker.lorem.word()
+      const value1 = randomProperty()
+      const key2 = faker.lorem.word()
+      const value2 = randomProperty()
+      const resource = Resource.create().batchAddProperties({
+        [key1]: value1,
+        [key2]: value2,
+      })
+
+      const property1 = resource.getProperty(key1)
+      const property2 = resource.getProperty(key2)
+
+      expect(property1).toStrictEqual(value1)
+      expect(property2).toStrictEqual(value2)
+    })
   })
 
   describe('embedded resource', () => {

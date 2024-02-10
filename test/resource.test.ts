@@ -332,9 +332,57 @@ describe('HAL Resource', () => {
       expect(resource.getProperty(key)).toStrictEqual(value)
     })
 
+    test('throws when creating Resource with _links not being an object', () => {
+      const action = () => Resource.fromObject({ _links: 'not an object' })
+
+      expect(action).toThrow('_links must be an object, but got string')
+    })
+
+    test('throws when creating Resource with link that is not Link or array of Links', () => {
+      const relation = faker.lorem.word()
+      const action = () =>
+        Resource.fromObject({
+          _links: {
+            [relation]: 'abc',
+          },
+        })
+
+      expect(action).toThrow(
+        `Link relation ${relation} must be a link or an array of links, but got string`,
+      )
+    })
+
+    test('throws when creating Resource with link with href that is not a string', () => {
+      const relation = faker.lorem.word()
+      const action = () =>
+        Resource.fromObject({
+          _links: {
+            [relation]: { href: 123 },
+          },
+        })
+
+      expect(action).toThrow(
+        `href of relation ${relation} must be a string, but got number`,
+      )
+    })
+
+    test('throws when creating Resource with link array which does not contain link', () => {
+      const relation = faker.lorem.word()
+      const action = () =>
+        Resource.fromObject({
+          _links: {
+            [relation]: ['abc'],
+          },
+        })
+
+      expect(action).toThrow(
+        `Item in relation ${relation} must be a link, but got string`,
+      )
+    })
+
     test('creates Resource with link from object', () => {
       const relation = faker.lorem.word()
-      const url = randomProperty()
+      const url = faker.internet.url()
       const object = {
         _links: {
           [relation]: { href: url },
@@ -349,7 +397,7 @@ describe('HAL Resource', () => {
 
     test('does not add _links as property', () => {
       const relation = faker.lorem.word()
-      const url = randomProperty()
+      const url = faker.internet.url()
       const object = {
         _links: {
           [relation]: { href: url },
@@ -363,7 +411,7 @@ describe('HAL Resource', () => {
 
     test('creates Resource with links from object', () => {
       const relation = faker.lorem.word()
-      const url = randomProperty()
+      const url = faker.internet.url()
       const object = {
         _links: {
           [relation]: [{ href: url }],

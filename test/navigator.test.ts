@@ -9,7 +9,7 @@ const server = new MockServer()
 
 beforeAll(() => server.listen())
 afterAll(() => server.close())
-beforeEach(() => server.resetHandlers())
+beforeEach(() => server.reset())
 
 describe('navigator', () => {
   describe('discover', () => {
@@ -163,6 +163,78 @@ describe('navigator', () => {
 
       const navigator = await Navigator.discover(url).then((navigator) =>
         navigator.get(relation),
+      )
+
+      expect(navigator.status).toBe(500)
+    })
+  })
+
+  describe('post', () => {
+    test('status is 201 when posting to relation succeeds', async () => {
+      const relation = 'createThing'
+      const url = 'https://example.com'
+      const createThingUrl = 'https://example.com/somethings/'
+      const resource = {
+        _links: {
+          [relation]: { href: createThingUrl },
+        },
+      }
+      const body = { name: faker.lorem.word() }
+      server.use(http.get(url, () => HttpResponse.json(resource)))
+      server.use(http.post(createThingUrl, () => HttpResponse.json({}, {status: 201})))
+
+     const navigator = await Navigator.discover(url)
+       .then((navigator) => navigator.post(relation, body))
+
+      const createRequest = server.recordedRequests[1]
+      expect(server.recordedRequests).toHaveLength(2)
+      expect(navigator.status).toBe(201)
+      expect(createRequest.method).toBe('POST')
+    })
+
+    test('status is status from response when posting to relation returns client or server error', async () => {
+      const relation = 'createThing'
+      const url = 'https://example.com'
+      const createThingUrl = 'https://example.com/somethings/'
+      const resource = {
+        _links: {
+          [relation]: { href: createThingUrl },
+        },
+      }
+      const statusCode = faker.internet.httpStatusCode({
+        types: ['clientError', 'serverError'],
+      })
+      server.use(
+        http.get(url, () => HttpResponse.json(resource)),
+        http.post(createThingUrl, () => HttpResponse.json({}, { status: statusCode })),
+      )
+
+      const navigator = await Navigator.discover(url)
+        .then(navigator => navigator.post(relation, {}))
+
+      expect(navigator.status).toBe(statusCode)
+    })
+
+    test('throws when attempting to post to relation that does not exist on resource', async () => {
+      const relation = 'non-existent-relation'
+      const url = 'https://example.com'
+      server.use(http.get(url, () => HttpResponse.json({})))
+      const navigator = await Navigator.discover(url)
+
+      const action = async () => await navigator.post(relation, {})
+
+      expect(action).rejects.toThrow(
+        `Link with relation '${relation}' does not exist on resource.`,
+      )
+    })
+
+    test('returns discovery error and does not attempt get when discovery fails before post', async () => {
+      const relation = 'non-existent-relation'
+      const url = 'https://example.com'
+      server.use(http.get(url, () => HttpResponse.json({}, { status: 500 })))
+
+      const navigator = await Navigator.discover(url).then((navigator) =>
+        navigator.post(relation, {}),
       )
 
       expect(navigator.status).toBe(500)

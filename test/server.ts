@@ -3,12 +3,16 @@ import { RequestHandler } from 'msw/lib/core/handlers/RequestHandler'
 
 export class MockServer {
   private readonly server: SetupServer
-  readonly recordedRequests: Array<Request> = []
+  private _recordedRequests: Array<Request> = []
+
+  get recordedRequests() {
+    return this._recordedRequests
+  }
 
   constructor(...handlers: Array<RequestHandler>) {
     this.server = setupServer(...handlers)
     this.server.events.on('request:start', ({ request }) => {
-      this.recordedRequests.push(request)
+      this._recordedRequests.push(request)
     })
   }
 
@@ -19,8 +23,9 @@ export class MockServer {
     this.server.close()
   }
 
-  resetHandlers(...nextHandlers: Array<RequestHandler>) {
+  reset(...nextHandlers: Array<RequestHandler>) {
     this.server.resetHandlers(...nextHandlers)
+    this._recordedRequests = []
   }
 
   use(...handlers: Array<RequestHandler>) {

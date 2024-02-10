@@ -76,7 +76,6 @@ console.log(resource.toJson())
     - batch adding resources
 
 - Navigator
-  - post
   - patch
   - put
   - http options

@@ -9,9 +9,11 @@ describe('HAL Resource', () => {
     const resource2 = resource1
       .addLink('2', 'link')
       .addProperty('2', 'property')
+      .addResource('2', Resource.create())
     const resource3 = resource1
       .addLink('3', 'link')
       .addProperty('3', 'property')
+      .addResource('2', Resource.create())
 
     const resource1Json = resource1.toObject()
     const resource2Json = resource2.toObject()
@@ -125,6 +127,36 @@ describe('HAL Resource', () => {
       const link = resource.getLink(relation)
       expect(link).toStrictEqual({ href: originalUrl })
     })
+
+    test('has previous links when adding new link', () => {
+      const relation = faker.lorem.word()
+      const url = faker.internet.url()
+      const relation2 = faker.lorem.word()
+      const url2 = faker.internet.url()
+
+      const resource = Resource.create().addLink(relation, url)
+        .addLink(relation2, url2)
+
+      const href = resource.getHref(relation)
+      const href2 = resource.getHref(relation2)
+      expect(href).toBe(url)
+      expect(href2).toBe(url2)
+    })
+
+    test('has previous links when adding new links', () => {
+      const relation = faker.lorem.word()
+      const url = faker.internet.url()
+      const relation2 = faker.lorem.word()
+      const url2 = faker.internet.url()
+
+      const resource = Resource.create().addLink(relation, url)
+        .addLinks(relation2, [url2])
+
+      const href = resource.getHref(relation)
+      const hrefs = resource.getHrefs(relation2)
+      expect(href).toBe(url)
+      expect(hrefs).toStrictEqual([url2])
+    })
   })
 
   describe('property', () => {
@@ -168,9 +200,7 @@ describe('HAL Resource', () => {
       )
 
       const embeddedResource = resource.getResource(key)
-      expect(embeddedResource.toObject()).toStrictEqual(
-        expectedEmbeddedResource.toObject(),
-      )
+      expect(embeddedResource).toStrictEqual(expectedEmbeddedResource)
     })
 
     test('throws when accessing array of resources with getResource', () => {

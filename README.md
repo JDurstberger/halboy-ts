@@ -60,9 +60,11 @@ console.log(resource.toJson())
   - patch
   - put
   - http options
-  - throw on error?
+  - support for path parameters
+  - support for query parameters
+
+- Link Building?
 
 - Test Support
 
-- Investigate jest retry
 - ESLint not erroring when function parameter type is missing

@@ -49,7 +49,7 @@ export class Resource {
 
   addLink(relation: string, href: string): Resource {
     return new Resource(
-      { [relation]: hrefToLink(href) },
+      {...this._links, [relation]: hrefToLink(href) },
       this._properties,
       this._embedded,
     )
@@ -57,7 +57,7 @@ export class Resource {
 
   addLinks(relation: string, hrefs: string[]): Resource {
     return new Resource(
-      { [relation]: hrefs.map(hrefToLink) },
+      { ...this._links, [relation]: hrefs.map(hrefToLink) },
       this._properties,
       this._embedded,
     )
@@ -69,9 +69,7 @@ export class Resource {
       if (Array.isArray(link)) {
         throw Error(`${relation} is an array of links.`)
       }
-      return {
-        ...link,
-      }
+      return structuredClone(link)
     }
   }
 
@@ -140,10 +138,7 @@ export class Resource {
   }
 
   toObject(): object {
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    const json: Record<string, any> = {
-      ...this._properties,
-    }
+    const json: Record<string, unknown> = structuredClone(this._properties)
     if (!isEmpty(this._links)) {
       json['_links'] = this._links
     }

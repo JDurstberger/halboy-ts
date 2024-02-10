@@ -14,8 +14,35 @@ pnpm:<br/> `pnpm add halboy-ts`
 
 # Usage
 
-Creating and managing resources is very simple.
+## Resources
 
+### Creating Resource through DSL
+
+```ts
+import { Resource } from 'halboy-ts'
+
+const resource = Resource.create('https://example.com/things/123')
+  .addProperty('someProp', 'hello, world!')
+
+console.log(resource.getProperty('someProp')) // hello, world!
+```
+
+### Creating Resource from JSON
+```ts
+import { Resource } from 'halboy-ts'
+
+const resource = Resource.fromObject({
+  someProp: 'hello, world!',
+  _links: {
+    otherThing: { href: 'https://example.com/other-things/456' }
+  }
+})
+
+console.log(resource.getProperty('someProp')) // hello, world!
+console.log(resource.getHref('otherThing')) //https://example.com/other-things/456
+```
+
+### Creating object from Resource for usage on wire
 ```ts
 import { Resource } from 'halboy-ts'
 
@@ -41,18 +68,11 @@ console.log(resource.toJson())
   - properties
     - batch add properties
   - links
-    - support for deprecation
-    - support for templated
-    - support for adding link object
     - batch adding links
+    - support for other link props
     - appending links to existing relation?
   - embedded
-    - support for arrays of resources
     - batch adding resources
-    - immutability when adding
-    - immutability when returning
-  - fromObject
-    - validation?
 
 - Navigator
 

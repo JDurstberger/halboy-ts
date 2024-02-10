@@ -69,7 +69,34 @@ describe('HAL Resource', () => {
       expect(link2).toStrictEqual({ href: url2 })
     })
 
-    test('returns links when accessing array of links with getLinks', () => {
+    test('returns link for added complex link', () => {
+      const relation = faker.lorem.word()
+      const url = faker.internet.url()
+
+      const resource = Resource.create().addLink(relation, { href: url })
+
+      const link = resource.getLink(relation)
+      expect(link).toStrictEqual({ href: url })
+    })
+
+    test('returns links for batch added complex links', () => {
+      const relation1 = faker.lorem.word()
+      const url1 = faker.internet.url()
+      const relation2 = faker.lorem.word()
+      const url2 = faker.internet.url()
+
+      const resource = Resource.create().batchAddLinks({
+        [relation1]: { href: url1 },
+        [relation2]: { href: url2 },
+      })
+
+      const link1 = resource.getLink(relation1)
+      const link2 = resource.getLink(relation2)
+      expect(link1).toStrictEqual({ href: url1 })
+      expect(link2).toStrictEqual({ href: url2 })
+    })
+
+    test('returns links for added links', () => {
       const relation = faker.lorem.word()
       const url1 = faker.internet.url()
       const url2 = faker.internet.url()

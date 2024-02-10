@@ -46,17 +46,17 @@ export class Resource {
     return fromObject(json)
   }
 
-  addLink(relation: string, href: string): Resource {
+  addLink(relation: string, href: string | Link): Resource {
     return new Resource(
-      { ...this._links, [relation]: hrefToLink(href) },
+      { ...this._links, [relation]: createLink(href) },
       this._properties,
       this._embedded,
     )
   }
 
-  batchAddLinks(links: {[key: string]: string}): Resource {
+  batchAddLinks(links: { [key: string]: string | Link }): Resource {
     return new Resource(
-      { ...this._links, ...mapObject(links, hrefToLink) },
+      { ...this._links, ...mapObject(links, createLink) },
       this._properties,
       this._embedded,
     )
@@ -64,7 +64,7 @@ export class Resource {
 
   addLinks(relation: string, hrefs: string[]): Resource {
     return new Resource(
-      { ...this._links, [relation]: hrefs.map(hrefToLink) },
+      { ...this._links, [relation]: hrefs.map(createLink) },
       this._properties,
       this._embedded,
     )
@@ -111,7 +111,7 @@ export class Resource {
       this._links,
       {
         ...this._properties,
-        ...structuredClone(properties)
+        ...structuredClone(properties),
       },
       this._embedded,
     )
@@ -174,6 +174,9 @@ export class Resource {
 
 const isEmpty = (o: object): boolean => Object.keys(o).length === 0
 
-const hrefToLink = (href: string): Link => ({
-  href,
-})
+const createLink = (raw: string | Link): Link => {
+  if (typeof raw === 'string') {
+    return { href: raw }
+  }
+  return raw
+}

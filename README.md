@@ -70,18 +70,12 @@ console.log(resource.toJson())
 # TODO
 
 - Resource
-
-  - properties
-    - batch add properties
   - links
-    - batch adding links
     - support for other link props
-    - appending links to existing relation?
   - embedded
     - batch adding resources
 
 - Navigator
-
   - post
   - patch
   - put

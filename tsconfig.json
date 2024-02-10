@@ -4,7 +4,8 @@
     "allowJs": true,
     "target": "ES2019",
     "module": "CommonJS",
-    "declaration": true
+    "declaration": true,
+    "strict": true
   },
   "include": ["./src/**/*"]
 }

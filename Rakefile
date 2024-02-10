@@ -53,4 +53,4 @@ namespace :version do
   end
 end
 
-task :default => [:'lib:formatting:fix', 'lib:lint', 'lib:test']
+task :default => [:'lib:formatting:fix', 'lib:lint:fix', 'lib:test']

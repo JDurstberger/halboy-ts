@@ -159,12 +159,11 @@ describe('navigator', () => {
     test('returns discovery error and does not attempt get when discovery fails before get', async () => {
       const relation = 'non-existent-relation'
       const url = 'https://example.com'
-      server.use(
-        http.get(url, () => HttpResponse.json({}, { status: 500 }))
-      )
+      server.use(http.get(url, () => HttpResponse.json({}, { status: 500 })))
 
-      const navigator = await Navigator.discover(url)
-        .then(navigator => navigator.get(relation))
+      const navigator = await Navigator.discover(url).then((navigator) =>
+        navigator.get(relation),
+      )
 
       expect(navigator.status).toBe(500)
     })

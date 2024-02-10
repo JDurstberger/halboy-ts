@@ -1,7 +1,7 @@
 import { Property } from '../src/resource'
 import { faker } from '@faker-js/faker'
 
-const randomItem = (array) => {
+const randomItem = <T>(array: Array<T>): T => {
   return array[Math.floor(Math.random() * array.length)]
 }
 

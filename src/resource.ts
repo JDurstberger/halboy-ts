@@ -1,15 +1,42 @@
 export type Link = {
   href: string
 }
+
 export type Links = { [key: string]: Link | Link[] }
+
 export type Property =
+  | undefined
+  | null
   | string
   | number
   | boolean
   | Property[]
   | { [key: string]: Property }
+
 export type Properties = { [key: string]: Property }
+
 type EmbeddedResources = { [key: string]: Resource | Resource[] }
+
+type JsonValue =
+  | undefined
+  | null
+  | string
+  | number
+  | boolean
+  | JsonObject
+  | JsonArray
+
+interface JsonObject {
+  [x: string]: JsonValue
+}
+
+interface JsonArray extends Array<JsonValue> {}
+type JsonResource = {
+  _links?: { [key: string]: JsonObject | JsonObject[] }
+  _embedded?: { [key: string]: JsonObject | JsonObject[] }
+  [key: string]: JsonValue
+}
+
 export class Resource {
   private readonly _links: Links
   private readonly _properties: Properties
@@ -31,17 +58,18 @@ export class Resource {
     return selfUrl ? resource.addLink('self', selfUrl) : resource
   }
 
-  static fromObject(json: object): Resource {
-    const links = json['_links'] ?? {}
-    const embedded: { [key: string]: object } = json['_embedded'] ?? {}
-    const properties = { ...json }
+  static fromObject(json: JsonResource): Resource {
+    const links: Links = json._links ? (json._links as Links) : {}
+    const embedded: { [key: string]: JsonObject | JsonObject[] } =
+      json._embedded ?? {}
+    const properties: Properties = { ...json }
     delete properties['_links']
     delete properties['_embedded']
     const resources = mapObject(
       embedded,
-      (embeddedResource: object | object[]) =>
+      (embeddedResource: JsonObject | JsonObject[]): Resource | Resource[] =>
         Array.isArray(embeddedResource)
-          ? embeddedResource.map((e: object) => this.fromObject(e))
+          ? embeddedResource.map((e: JsonObject) => this.fromObject(e))
           : this.fromObject(embeddedResource),
     )
     return new Resource(links, properties, resources)
@@ -49,7 +77,7 @@ export class Resource {
 
   addLink(relation: string, href: string): Resource {
     return new Resource(
-      {...this._links, [relation]: hrefToLink(href) },
+      { ...this._links, [relation]: hrefToLink(href) },
       this._properties,
       this._embedded,
     )
@@ -156,12 +184,15 @@ export class Resource {
 
 const isEmpty = (o: object): boolean => Object.keys(o).length === 0
 
-const mapObject = <T, R>(
-  obj: { [key: string]: T },
-  f: (v: T) => R,
-): { [key: string]: R } =>
+const mapObject = <From, To>(
+  obj: { [key: string]: From },
+  f: (v: From) => To,
+): { [key: string]: To } =>
   Object.fromEntries(
-    Object.entries(obj).map(([k, v]: [string, T]): [string, R] => [k, f(v)]),
+    Object.entries(obj).map(([k, v]: [string, From]): [string, To] => [
+      k,
+      f(v),
+    ]),
   )
 
 const hrefToLink = (href: string): Link => ({

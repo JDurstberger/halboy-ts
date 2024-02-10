@@ -122,7 +122,7 @@ describe('HAL Resource', () => {
       const originalUrl = faker.internet.url()
       const resource = Resource.create().addLink(relation, originalUrl)
 
-      resource.getLink(relation).href = faker.internet.url()
+      resource.getLink(relation)!.href = faker.internet.url()
 
       const link = resource.getLink(relation)
       expect(link).toStrictEqual({ href: originalUrl })
@@ -134,7 +134,8 @@ describe('HAL Resource', () => {
       const relation2 = faker.lorem.word()
       const url2 = faker.internet.url()
 
-      const resource = Resource.create().addLink(relation, url)
+      const resource = Resource.create()
+        .addLink(relation, url)
         .addLink(relation2, url2)
 
       const href = resource.getHref(relation)
@@ -149,7 +150,8 @@ describe('HAL Resource', () => {
       const relation2 = faker.lorem.word()
       const url2 = faker.internet.url()
 
-      const resource = Resource.create().addLink(relation, url)
+      const resource = Resource.create()
+        .addLink(relation, url)
         .addLinks(relation2, [url2])
 
       const href = resource.getHref(relation)
@@ -397,11 +399,11 @@ describe('HAL Resource', () => {
       expect(resource.toObject()).toStrictEqual(json)
       expect(resource.getProperty('_links')).toBeUndefined()
       expect(resource.getProperty('_embedded')).toBeUndefined()
-      expect(embeddedResource.getHref(embeddedResourceRelation)).toStrictEqual(
+      expect(embeddedResource!.getHref(embeddedResourceRelation)).toStrictEqual(
         embeddedResourceUrl,
       )
       expect(
-        embeddedResource.getProperty(embeddedResourcePropertyKey),
+        embeddedResource!.getProperty(embeddedResourcePropertyKey),
       ).toStrictEqual(embeddedResourcePropertyValue)
     })
 
@@ -424,7 +426,7 @@ describe('HAL Resource', () => {
       const embeddedResources = resource.getResources(embeddedResourceKey)
       expect(embeddedResources).toHaveLength(1)
       expect(
-        embeddedResources[0].getProperty(embeddedResourcePropertyKey),
+        embeddedResources![0].getProperty(embeddedResourcePropertyKey),
       ).toStrictEqual(embeddedResourcePropertyValue)
     })
   })

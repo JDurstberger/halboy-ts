@@ -1,4 +1,4 @@
-name: ci
+name: Halboy TS
 
 on:
   push:
@@ -44,6 +44,12 @@ jobs:
       - name: build
         shell: bash
         run: ./go lib:build
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          if-no-files-found: error
+          name: build
+          path: build
 
   pre-release:
     environment: pre-release
@@ -51,6 +57,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build
       - uses: ./.github/actions/prepare-ruby
       - uses: ./.github/actions/prepare-nodejs
       - name: configure-git

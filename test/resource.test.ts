@@ -225,6 +225,16 @@ describe('HAL Resource', () => {
       expect(property).toStrictEqual(value)
     })
 
+    test('returns value with type for added property', () => {
+      const key = faker.lorem.word()
+      const value = 'aString'
+      const resource = Resource.create().addProperty(key, value)
+
+      const property = resource.getProperty<string>(key)
+
+      expect(property).toStrictEqual(value)
+    })
+
     test('returns values for batch added properties', () => {
       const key1 = faker.lorem.word()
       const value1 = randomProperty()

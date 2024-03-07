@@ -117,8 +117,8 @@ export class Resource {
     )
   }
 
-  getProperty(key: string): Property {
-    return this._properties[key]
+  getProperty<T = Property>(key: string): T {
+    return this._properties[key] as T
   }
 
   addResource(key: string, resource: Resource): Resource {

@@ -8,7 +8,7 @@ jobs:
   check-formatting:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare-ruby
       - uses: ./.github/actions/prepare-nodejs
       - name: check formatting
@@ -17,7 +17,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare-ruby
       - uses: ./.github/actions/prepare-nodejs
       - name: lint
@@ -27,7 +27,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare-ruby
       - uses: ./.github/actions/prepare-nodejs
       - name: run tests
@@ -38,7 +38,7 @@ jobs:
     needs: [check-formatting, lint, test]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare-ruby
       - uses: ./.github/actions/prepare-nodejs
       - name: build
@@ -56,7 +56,7 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: build
